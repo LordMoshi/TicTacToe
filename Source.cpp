@@ -2,19 +2,32 @@
 #include <vector>
 #include <string>
 using namespace std;
+
+
 char matrix[3][3] = { 'a','b','c','d','e','f','g','h','i' };
 char player = 'x';
-vector<string> pName = {""};
-vector<int> pScore = { 0 };
-vector<int> pWins = { 0 };
-vector<int> pLoss = { 0 };
+vector<string> pName ;
+vector<int> pScore ;
+vector<int> pWins ;
+int index = 0;
+int index2 = 1;
+int cScore = 0;
+int cWins = 0;
 
 
+//Initialising
+int menu();
+void twoPlayer();
+void vsComp();
+
+// Find a maximum of 2 numbers
 int min(int a, int b)
 {
 	if (a < b) return a;
 	else return b;
 }
+
+// Find a minimum of 2 numbers
 int max(int a, int b)
 {
 	if (a >= b) return a;
@@ -35,7 +48,8 @@ bool isMovesLeft(char b[3][3])
                 return true; 
     return false; 
 } 
-  
+ 
+// Simulation function for minimax
 int checkWin(char b[3][3]) 
 { 
     // Wins on Rows
@@ -197,7 +211,7 @@ Move bestMove(char b[3][3])
 } 
 
 
-
+// Function to draw the board
 void Draw()
 {
 
@@ -209,6 +223,7 @@ void Draw()
 	}
 }
 
+// Check for valid board input
 void Input()
 {
 	char inp;
@@ -275,6 +290,7 @@ void Input()
 
 }
 
+// Toggleplayer between 'x' and 'o'
 void TogglePlayer()
 {
 	if (player == 'x') {
@@ -285,6 +301,7 @@ void TogglePlayer()
 	}
 }
 
+// Defining win condition
 char win()
 {
 	if (matrix[0][0] == player && matrix[0][1] == player && matrix[0][2] == player) return player;
@@ -300,6 +317,38 @@ char win()
 	return '/';
 }
 
+// Check if player name
+// exists and assign
+// their indexes
+bool ifFound(string playername, int num) {
+	for (int i = 0; i < pName.size(); i++)
+	{
+		if (pName[i] == playername && num == 1) {
+			index = i;
+			return true;
+		}
+		else if (pName[i] == playername && num == 2)
+		{
+			index2 = i;
+			return true;
+		}
+	}
+	return false;
+}
+
+// Check if player 
+// name exists
+bool checkScore(string playername) {
+	for (int i = 0; i < pName.size(); i++)
+	{
+		if (pName[i] == playername) return true;
+	}
+	return false;
+}
+
+
+// Function to start
+// two player game
 void twoPlayer() {
 	Draw();
 	while (1)
@@ -307,24 +356,31 @@ void twoPlayer() {
 		Input();
 		if (win() == 'x') {
 			cout << "X wins!"<<endl;
-
-
+			pScore[index] += 10;
+			pWins[index] += 1;
+			menu();
+			break;
 		}
 		else if (win() == 'o')
 		{
 			cout << "O wins!" <<endl;
-
+			menu();
+			break;
 		}
 		else if (!isMovesLeft(matrix))
 		{
 			cout << "Game is  draw!"<<endl;
+			menu();
 			break;
 		}
 		Draw();
 		TogglePlayer();
+		
 	}
 }
 
+
+// Function to play vs computer
 void vsComp() {
 	Draw();
 	while (1)
@@ -335,28 +391,28 @@ void vsComp() {
 
 			if (win() == 'x') {
 				cout << "X wins!";
-				break;
-			}
-			else if (win() == 'o')
-			{
-				cout << "O wins!";
+				pScore[index] += 10;
+				pWins[index] += 1;
+				menu();
 				break;
 			}
 			Draw();
 			TogglePlayer();
+
 		}
 		if (player == 'o')
 		{
 			Move newMove = bestMove(matrix);
-			cout << endl << "best move is [" << newMove.row << "][" << newMove.col << "]" << endl;
+			cout << endl << "The computer played [" << newMove.row << "][" << newMove.col << "]" << endl;
 			matrix[newMove.row][newMove.col] = 'o';
-			if (win() == 'x') {
-				cout << "X wins!";
-				break;
-			}
-			else if (win() == 'o')
+			if (win() == 'o')
 			{
-				cout << "O wins!";
+				cout << "O wins!" << endl;
+				cScore += 10;
+				cWins += 1;
+				Draw();
+				cout << endl;
+				menu();
 				break;
 			}
 			Draw();
@@ -366,41 +422,97 @@ void vsComp() {
 	}
 }
 
-int main()
+// Function to reset 
+// initial board
+void resetMat()
 {
-	
-	while (1)
-	{	
-		int index = 0;
-		int score = 0;
+	matrix[0][0] = 'a';
+	matrix[0][1] = 'b';
+	matrix[0][2] = 'c';
+	matrix[1][0] = 'd';
+	matrix[1][1] = 'e';
+	matrix[1][2] = 'f';
+	matrix[2][0] = 'g';
+	matrix[2][1] = 'h';
+	matrix[2][2] = 'i';
+}
 
-		string name;
+
+// Game Menu
+int menu() {
+	//reset board and player
+	player = 'x';
+	resetMat();
+	int score = 0;
+
+	string name;
+	cout << "Please enter your name :";
+	cin >> name;
+	//if player not found then create new identity
+	if (!ifFound(name,1)) {
+		pName.push_back(name);
+		pScore.push_back(0);
+		pWins.push_back(0);
+		index = pName.size() - 1;
+	}
+	
+	int mode;
+	cout << "1. Player vs Player" << endl << "2. Player vs Computer" << endl   <<"3. View score"<<endl<<"4. View computer score."<< endl << "5. Close game." << endl << "Select mode : ";
+	cin >> mode; cout << endl;
+
+
+	//If 2 player selected
+	if (mode == 1) {
+
+		string name2;
+		cout << "Please enter player 2 name :";
+		cin >> name2;
+		//if player 2 not found then create new identity
+		if (!ifFound(name, 2)) {
+			pName.push_back(name);
+			pScore.push_back(0);
+			pWins.push_back(0);
+			index = pName.size() - 1;
+		}
+
+		//Run 2 player game mode
+		twoPlayer();
+	}
+
+	//If vs Computer selected
+	else if (mode == 2)
+	{
+		vsComp();
+	}
+
+	//View your score
+	else if (mode == 3)
+	{
 		cout << "Please enter your name :";
 		cin >> name;
 		for (int i = 0; i < pName.size(); i++)
 		{
-			if (pName[i] == name) index = i;
-			else
-			{
-				pName.push_back(name);
-				pScore.push_back(0);
-				pWins.push_back(0);
-				pLoss.push_back(0);
+			if (pName[i] == name) {
+				cout << "Player score : " << pScore[i] << endl;
+				cout << "Player wins : " << pWins[i] << endl;
 			}
 		}
-
-		int mode;
-		cout << "1. Player vs Player" << endl << "2. Player vs Computer" << endl << "3. Close game." << endl << "Select Game mode : " ;
-		cin >> mode; cout << endl;
-		if (mode == 1) {
-
-			twoPlayer();
-		}
-		else if (mode == 2)
-		{
-			vsComp();
-		}
-		else if (mode == 3) break;
-		return 0;
+		if (!checkScore) cout << "Name not found.";
+		menu();
 	}
+
+	//Exit game
+	else if (mode == 4)
+	{
+		cout << "Computer score : " << cScore << endl;
+		cout << "Computer wins : " << cWins << endl;
+		menu();
+	}
+	else if (mode == 5)return 0;
+}
+
+int main()
+{
+	menu();
+	return 0;
 }

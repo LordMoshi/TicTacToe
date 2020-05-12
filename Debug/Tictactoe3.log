@@ -1,3 +1,7 @@
 ﻿  Source.cpp
-c:\users\nadhira de soysa\source\repos\tictactoe3\tictactoe3\source.cpp(386): warning C4018: '<': signed/unsigned mismatch
+c:\users\nadhira de soysa\source\repos\tictactoe3\tictactoe3\source.cpp(324): warning C4018: '<': signed/unsigned mismatch
+c:\users\nadhira de soysa\source\repos\tictactoe3\tictactoe3\source.cpp(342): warning C4018: '<': signed/unsigned mismatch
+c:\users\nadhira de soysa\source\repos\tictactoe3\tictactoe3\source.cpp(493): warning C4018: '<': signed/unsigned mismatch
+c:\users\nadhira de soysa\source\repos\tictactoe3\tictactoe3\source.cpp(500): warning C4551: function call missing argument list
+c:\users\nadhira de soysa\source\repos\tictactoe3\tictactoe3\source.cpp(512): warning C4715: 'menu': not all control paths return a value
   Tictactoe3.vcxproj -> C:\Users\Nadhira De Soysa\source\repos\Tictactoe3\Debug\Tictactoe3.exe
